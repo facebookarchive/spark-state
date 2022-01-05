@@ -119,12 +119,14 @@ function initPeerSyncState(syncStates, peerId) {
  */
 function generateSyncMessages(state, syncStates, peerId) {
   const syncMsgs = []
+  // Due to RTP message size limit, need to split sync message if it is too big
+  const maxSyncMsgLength = 800
 
   Object.entries(syncStates).forEach(([targetPeerId, syncState]) => {
     const [nextSyncState, syncMessage] = Automerge.generateSyncMessage(
       state,
       syncState || initSyncState(),
-      4, // max number of changes
+      maxSyncMsgLength
     )
     syncStates[targetPeerId] = nextSyncState
 

@@ -6,6 +6,6 @@ const GlobalCounter = require('./global_counter')
 const GlobalString = require('./global_string')
 const GlobalMap = require('./global_map')
 
-module.exports.createCounterGlobalSignal = GlobalCounter.createCounterGlobalSignal
-module.exports.createStringGlobalSignal = GlobalString.createStringGlobalSignal
-module.exports.createPeersMapGlobal = GlobalMap.createPeersMapGlobal
+module.exports.createGlobalCounterSignal = GlobalCounter.createGlobalCounterSignal
+module.exports.createGlobalStringSignal = GlobalString.createGlobalStringSignal
+module.exports.createGlobalPeersMap = GlobalMap.createGlobalPeersMap

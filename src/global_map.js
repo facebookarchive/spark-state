@@ -59,16 +59,19 @@ async function addNewParticipants(map, participantsStartValue) {
 function getCreateValueSignalFunction(participantsStartValue) {
   let createValueSignal
   if (typeof participantsStartValue === 'number') {
-    createValueSignal = GlobalCounter.createCounterGlobalSignal
+    createValueSignal = GlobalCounter.createGlobalCounterSignal
   } else if (typeof participantsStartValue === 'string') {
-    createValueSignal = GlobalString.createStringGlobalSignal
+    createValueSignal = GlobalString.createGlobalStringSignal
   } else {
     throw TypeError(UNSUPPORTED_MAP_VALUE_MESSAGE)
   }
   return createValueSignal
 }
 
-export async function createPeersMapGlobal(participantsStartValue, signalName) {
+/**
+ * Creates a new `GlobalPeersMap` with a globally unique name as specified by `signalName`, and with the initial value set by `participantsStartValue`.
+ */
+export async function createGlobalPeersMap(participantsStartValue, signalName) {
   // Currently the values can only be counters
   // startValue should be a number
   const map = {}

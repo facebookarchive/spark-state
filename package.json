@@ -1,6 +1,6 @@
 {
   "name": "spark-state",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "src/state.js",
   "scripts": {
@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/facebookincubator/spark-state#readme",
   "dependencies": {
-    "Automerge": "facebookincubator/automerge#e21f48ccc67a58c1f944ec1f223c0336a1bfa0d4"
+    "Automerge": "facebookincubator/automerge#81266592fa9f5f5b8ec0c57b3cf2f1c3d79e4dde",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "chai": "^4.3.4",

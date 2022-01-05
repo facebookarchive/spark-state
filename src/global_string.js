@@ -22,7 +22,10 @@ function guaranteeStateString(state, signalName, startValue) {
   return (Object.prototype.hasOwnProperty.call(state, signalName) ? state : SparkAutomergeWrapper.initSignalString(INIT_COMMIT_MESSAGE, signalName, startValue))
 }
 
-export async function createStringGlobalSignal(startValue, signalName) {
+/**
+ * Creates a new `GlobalStringSignal` with a globally unique name as specified by `signalName`, and with the initial value set by `startValue`.
+ */
+export async function createGlobalStringSignal(startValue, signalName) {
   const signal = await SignalsWrapper.String(startValue, signalName)
 
   const updateState = (state, signalName, event) => {

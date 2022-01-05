@@ -22,7 +22,10 @@ function guaranteeStateCounter(state, signalName, startValue) {
   return (Object.prototype.hasOwnProperty.call(state, signalName) ? state : SparkAutomergeWrapper.initSignalCounter(INIT_COMMIT_MESSAGE, signalName, startValue))
 }
 
-export async function createCounterGlobalSignal(startValue, signalName) {
+/**
+ * Creates a new `GlobalCounterSignal` with a globally unique name as specified by `signalName`, and with the initial value set by `startValue`.
+ */
+export async function createGlobalCounterSignal(startValue, signalName) {
   const signal = await SignalsWrapper.Counter(startValue, signalName)
 
   const updateState = (state, signalName, event) => {

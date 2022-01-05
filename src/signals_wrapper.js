@@ -5,8 +5,7 @@
 const Reactive = require('Reactive')
 
 /**
- * Returns an `ScalarSignal` object that can be modified with
- * `set` `increment` and `decrement` functions
+ * Returns a `ScalarSignal` object that can be modified via calls to the `increment`, `decrement` or `set` methods.
  */
 export async function Counter(startValue, signalName) {
   const source = Reactive.scalarSignalSource(signalName)
@@ -37,8 +36,7 @@ export async function Counter(startValue, signalName) {
 }
 
 /**
- * Creates an StringSignal object that can be modified with
- * `set` function
+ * Returns a `StringSignal` object that can be modified via calls to the `set` method.
  */
 export async function String(startValue, signalName) {
   const source = Reactive.stringSignalSource(signalName);
