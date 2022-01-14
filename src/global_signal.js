@@ -58,9 +58,9 @@ export async function createGlobalSignal(signal, startValue, signalName, guarant
       }
     }
 
-    // Delay the message passing when value is updated from the network
-    // This is to prevent each node sending too many messages at one time.
-    // Otherwise all ack and sync messages are duplicated and storming the network
+    // Delay the message passing when the value is updated from the network, to
+    // prevent each node from sending too many messages at any one time.
+    // Otherwise, all ack and sync messages are duplicated and storm the network.
     if (delayTimer) {
       delayTimer.unsubscribe();
     }

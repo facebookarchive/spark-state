@@ -8,15 +8,15 @@ const SparkAutomergeWrapper = require('./spark_automerge_wrapper')
 const INIT_COMMIT_MESSAGE = 'INIT_COUNTER_COMMIT_MESSAGE'
 
 /**
- * If state doesn't have the counter defined, it creates a state with a counter that
- * will be located at property `signalName`. Because should only initiate the counter
- * if no other peer has done it yet.
+ * If state doesn't have the counter defined, this method creates a state with a counter that
+ * will be located at property `signalName`. This ensures that a counter is only initialized
+ * if no other peer has done so yet.
+ * 
+ * If the counter is already defined, this returns the current state, as the counter will have been
+ * initialized when synchronizing.
  *
- * Otherwise, returns the current state. Because the counter was initiated by its own
- * when synchronising
- *
- * NOTE: should always call this function before updating the counter if there is a
- * chance of the counter not been initialized yet.
+ * NOTE: This method should always be called before updating the counter if there is a
+ * chance that the counter has not been initialized yet.
  */
 function guaranteeStateCounter(state, signalName, startValue) {
   return (Object.prototype.hasOwnProperty.call(state, signalName) ? state : SparkAutomergeWrapper.initSignalCounter(INIT_COMMIT_MESSAGE, signalName, startValue))
