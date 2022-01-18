@@ -66,7 +66,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
 Additionally, it's possible to subscribe to a `GlobalCounterSignal` like you would with an [`EventSource`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource):
 
 ```js
-GlobalCounterSignal.subscribe(() => {
+GlobalCounterSignal.monitor().subscribe((event) => {
   // Code here will run when the value of the signal changes
 });
 ```
@@ -115,7 +115,7 @@ const State = require('spark-state');
 Additionally, it's possible to subscribe to a `GlobalStringSignal` like you would with an [`EventSource`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource):
 
 ```js
-GlobalStringSignal.subscribe(() => {
+GlobalStringSignal.monitor().subscribe((event) => {
   // Code here will run when the value of the signal changes
 });
 ```
