@@ -30,7 +30,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
 
 ### Spark AR project setup
 
-1. [Download](https://sparkar.facebook.com/ar-studio/learn/downloads/) or upgrade to Spark AR Studio v128 or higher.
+1. <a href="https://sparkar.facebook.com/ar-studio/learn/downloads/" target="_blank">Download</a> or upgrade to Spark AR Studio v128 or higher.
 2. Open your project in Spark AR Studio.
 3. Open the AR Library from within the Assets panel and select the **Script Packages** tab.
 4. Import the `spark-state` package to the project.
@@ -61,9 +61,9 @@ The **Spark State** library introduces a solution to manage effects' states by c
 
 ### `GlobalCounterSignal`
 
-`GlobalCounterSignal` is a wrapper object for the [`ScalarSignal`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal/) class from the Spark AR API's `ReactiveModule`. However, the scalar value contained by the signal is synchronized globally across all peers in a multipeer effect.
+`GlobalCounterSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal/" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronized globally across all peers in a multipeer effect.
 
-Additionally, it's possible to subscribe to a `GlobalCounterSignal` like you would with an [`EventSource`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource):
+Additionally, it's possible to subscribe to a `GlobalCounterSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
 ```js
 GlobalCounterSignal.monitor().subscribe((event) => {
@@ -82,11 +82,11 @@ GlobalCounterSignal.monitor().subscribe((event) => {
 
 <br>
 
-> `GlobalCounterSignal` extends the `ScalarSignal` class. As such, [methods](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal#methods) exposed by `ScalarSignal` can also be called on `GlobalCounterSignal`.
+> `GlobalCounterSignal` extends the `ScalarSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal#methods/" target="_blank">methods</a> exposed by `ScalarSignal` can also be called on `GlobalCounterSignal`.
 
 <br>
 
-<details><summary><b>Example</b></summary>
+<details><summary><b>Click to view example</b></summary>
 <p>
 
 ```js
@@ -110,9 +110,9 @@ const State = require('spark-state');
 
 ### `GlobalStringSignal`
 
-`GlobalStringSignal` is a wrapper object for the [`StringSignal`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.stringsignal/) class from the Spark AR API's `ReactiveModule`. However, the string value contained by the signal is synchronised globally across all peers in a multipeer effect.
+`GlobalStringSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.stringsignal/" target="_blank">`StringSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the string value contained by the signal is synchronised globally across all peers in a multipeer effect.
 
-Additionally, it's possible to subscribe to a `GlobalStringSignal` like you would with an [`EventSource`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource):
+Additionally, it's possible to subscribe to a `GlobalStringSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
 ```js
 GlobalStringSignal.monitor().subscribe((event) => {
@@ -129,11 +129,11 @@ GlobalStringSignal.monitor().subscribe((event) => {
 
 <br>
 
-> `GlobalStringSignal` extends the `StringSignal` class. As such, [methods](https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.stringsignal#methods) exposed by `StringSignal` can also be called on `GlobalStringSignal`.
+> `GlobalStringSignal` extends the `StringSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.stringsignal#methods/" target="_blank">methods</a> exposed by `StringSignal` can also be called on `GlobalStringSignal`.
 
 <br>
 
-<details><summary><b>Example</b></summary>
+<details><summary><b>Click to view example</b></summary>
 <p>
 
 ```js
@@ -157,27 +157,26 @@ const State = require('spark-state');
 
 ### `GlobalPeersMap`
 
-`GlobalPeersMap` is a key-value pair data type which contains the IDs of all [participants](https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant) in a multipeer effect as keys, and their global signals as values. 
+`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a multipeer effect as keys, and their global signals as values. 
 
 Values of types `GlobalCounterSignal` and `GlobalStringSignal` are supported.
 
-The `participantId` parameters in the method calls refer to each effect participant's unique ID string as returned by the [`Participant.id`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant#properties) property from the Spark AR API.
+The `participantId` parameters in the method calls refer to each effect participant's unique ID string as returned by the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant#properties" target="_blank">`Participant.id`</a> property from the Spark AR API.
 
 <br>
 
 | Methods | Description |
 |---|---|
 | `createGlobalPeersMap(participantsStartValue: number \| string, signalName: string)` | Creates a new `GlobalPeersMap` with a globally unique name as specified by `signalName`, and with the initial value set by `participantsStartValue`. |
-| `get(participantId: string)` | Returns the `GlobalCounterSignal` or `GlobalStringSignal` from the [`Participant`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant) specified by `participantId`. |
-| `set(participantId: string, val: number \| string)` | Sets the value of the `GlobalCounterSignal` or `GlobalStringSignal` to the value specified by `val`, for the [`Participant`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant) specified by `participantId`. |
+| `get(participantId: string)` | Returns the `GlobalCounterSignal` or `GlobalStringSignal` from the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
+| `set(participantId: string, value: number \| string)` | Sets the value of the `GlobalCounterSignal` or `GlobalStringSignal` to the value specified by `value`, for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
 | `keys()` | Returns all of the keys from the `GlobalPeersMap`, as `participantIds`. |
 | `setOnNewPeerCallback(callback: Function)` | Sets a `callback` function to call whenever a new peer is added to the `GlobalPeersMap`. |
 
 <br>
 
-<details><summary><b>Example</b></summary>
+<details><summary><b>Click to view example</b></summary>
 <p>
-
 
 ```js
 const State = require('spark-state');
@@ -186,7 +185,7 @@ const Participants = require('Participants');
 (async function () {
 
     // Initializes a new global peer map
-    const points = await State.createPeersGlobalMap(0, 'points');
+    const points = await State.createGlobalPeersMap(0, 'points');
 
     // Retrieve the ID for the self participant
     const myParticipantId = await.Participants.self.id;
@@ -202,25 +201,25 @@ const Participants = require('Participants');
 
 <br><br>
 
-> Full Spark AR API documentation is available on the [main documentation site](https://sparkar.facebook.com/ar-studio/learn/reference/scripting/summary).
+> Full Spark AR API documentation is available on the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/scripting/summary" target="_blank">main documentation site</a>.
 
 <br><br>
 
 ## Example
 
-The sample code found in the [`script.js`](../src/script.js) file shows practical usage for all of the global types currently supported by the **Spark State** library.
+The sample code found in the [`script.js`](./src/script.js) file shows practical usage for all of the global types currently supported by the **Spark State** library.
 
 <br><br>
 
 
 ### Additional resources
 
-The following resources are available on the [**Spark AR Studio**](https://sparkar.facebook.com/ar-studio/learn/getting-started) documentation site:
+The following resources are available on the <a href="https://sparkar.facebook.com/ar-studio/learn/getting-started" target="_blank">**Spark AR Studio**</a> documentation site:
 
-- [`ParticipantsModule`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule)
-- [`MultipeerModule`](https://sparkar.facebook.com/ar-studio/learn/reference/classes/multipeermodule)
-- [Scripting your first multipeer effect](https://sparkar.facebook.com/ar-studio/learn/scripting/scripting-your-first-multipeer-effect)
-- [Creating turn-based experiences](https://sparkar.facebook.com/ar-studio/learn/scripting/creating-turn-based-experiences)
+- <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule" target="_blank">`ParticipantsModule`</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/multipeermodule" target="_blank">`MultipeerModule`</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/scripting/scripting-your-first-multipeer-effect" target="_blank">Scripting your first multipeer effect</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/scripting/creating-turn-based-experiences" target="_blank">Creating turn-based experiences</a>
 
 <br><br> 
 
