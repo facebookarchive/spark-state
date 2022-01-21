@@ -188,7 +188,7 @@ const Participants = require('Participants');
     const points = await State.createGlobalPeersMap(0, 'points');
 
     // Retrieve the ID for the self participant
-    const myParticipantId = await.Participants.self.id;
+    const myParticipantId = (await Participants.self).id;
 
     // Get the GlobalCounterSignal from the specified participant
     const pointCounter = await points.get(myParticipantId);
