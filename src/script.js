@@ -62,7 +62,7 @@ const TouchGestures = require('TouchGestures');
   peersPointsText.text = text;
   
   // Retrieve the ID for the 'self' participant
-  const myParticipantId = await Participants.self.id;
+  const myParticipantId = (await Participants.self).id;
 
   // When the current participant taps on the screen, increase the global counter 
   // asociated with its key
