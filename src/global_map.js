@@ -5,6 +5,7 @@
 const Participants = require('Participants')
 const GlobalString = require('./global_string')
 const GlobalCounter = require('./global_counter')
+const Diagnostics =   require('Diagnostics');
 
 const UNSUPPORTED_MAP_VALUE_MESSAGE = '`participantsStartValue` should be a number or string. Map values can only be Global Counters or Global Strings'
 
@@ -91,6 +92,7 @@ export async function createGlobalPeersMap(participantsStartValue, signalName) {
   }
 
   map.get = async (participantId) => {
+    //Diagnostics.log(map[participantId])
     return map[participantId]
   }
 
