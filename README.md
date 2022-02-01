@@ -42,7 +42,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
 
 1. Add a new Javascript script to the project from the Assets panel, or open an existing one.
 2. At the top of the script, load the module using the following line of code:
-   
+
    ```js
    const State = require('spark-state');
    ```
@@ -155,9 +155,57 @@ const State = require('spark-state');
 <br><br>
 
 
+### `GlobalScalarSignal`
+
+`GlobalScalarSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/ReactiveModule.ScalarSignal" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronised globally across all peers in a multipeer effect.
+
+Additionally, it's possible to subscribe to a `GlobalScalarSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
+
+```js
+GlobalScalarSignal.monitor().subscribe((event) => {
+  // Code here will run when the value of the signal changes
+});
+```
+
+<br>
+
+| Methods | Description |
+|---|---|
+| `createGlobalScalarSignal(startValue: number, signalName: string)` | Creates a new `GlobalScalarSignal` with a globally unique name as specified by `signalName`, and with the initial value set by `startValue`. |
+| `set(val: number)` | Sets the value of the `GlobalScalarSignal` to `val`. |
+
+<br>
+
+> `GlobalScalarSignal` extends the `ScalarSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal#methods/" target="_blank">methods</a> exposed by `ScalarSignal` can also be called on `GlobalScalarSignal`.
+
+<br>
+
+<details><summary><b>Click to view example</b></summary>
+<p>
+
+```js
+const State = require('spark-state');
+
+(async function () {
+
+    // Initializes a new global scalar signal with the initial value: 0
+    const globalScalar = await State.creatScalarGlobalSignal(0, 'globalScalar');
+
+    // Sets the value of the signal to 42
+    globalScalar.set(42);
+})();
+```
+
+</p>
+</details>
+
+<br><br>
+
+
+
 ### `GlobalPeersMap`
 
-`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a multipeer effect as keys, and their global signals as values. 
+`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a multipeer effect as keys, and their global signals as values.
 
 Values of types `GlobalCounterSignal` and `GlobalStringSignal` are supported.
 
@@ -221,7 +269,7 @@ The following resources are available on the <a href="https://sparkar.facebook.c
 - <a href="https://sparkar.facebook.com/ar-studio/learn/scripting/scripting-your-first-multipeer-effect" target="_blank">Scripting your first multipeer effect</a>
 - <a href="https://sparkar.facebook.com/ar-studio/learn/scripting/creating-turn-based-experiences" target="_blank">Creating turn-based experiences</a>
 
-<br><br> 
+<br><br>
 
 ### License
 

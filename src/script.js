@@ -50,34 +50,34 @@ const TouchGestures = require('TouchGestures');
   //==================================================================================
   // GlobalPeersMap with counters
   //==================================================================================
-  
+
   // Locate the peers points text object in the Scene
   const peersPointsText = await Scene.root.findFirst('peersPointsText');
 
   // Create a global map with the peer IDs, each one associated to a counter set to 0
   const peersPoints = await State.createGlobalPeersMap(0, 'points');
-  
+
   // Update the text with the values from the map
   let text = await formatPeersMap(peersPoints, '- Participants Points -', (value) => value.toString());
   peersPointsText.text = text;
-  
+
   // Retrieve the ID for the 'self' participant
   const myParticipantId = (await Participants.self).id;
 
-  // When the current participant taps on the screen, increase the global counter 
+  // When the current participant taps on the screen, increase the global counter
   // asociated with its key
   TouchGestures.onTap().subscribe(async (gesture) => {
     const myCounter = (await peersPoints.get(myParticipantId));
     myCounter.increment(1);
   });
-  
+
   // When a new participant joins the call, add its counter to the screen
   peersPoints.setOnNewPeerCallback((peerId) => {
     text = updatePeersMap(text, peersPoints, peerId, (value) => value.toString());
     peersPointsText.text = text;
   });
 
-  
+
   //==================================================================================
   // GlobalPeersMap with strings
   //==================================================================================
@@ -98,7 +98,7 @@ const TouchGestures = require('TouchGestures');
   let animalsText = await formatPeersMap(peersAnimals, '- Participants Animals -');
   peersAnimalsText.text = animalsText;
 
-  // When the current participant taps on the screen, increase the global counter 
+  // When the current participant taps on the screen, increase the global counter
   // asociated with its key
   TouchGestures.onTap().subscribe(async (gesture) => {
     nextAnimalPosition = (nextAnimalPosition + 1) % animalList.length;
@@ -111,7 +111,7 @@ const TouchGestures = require('TouchGestures');
     peersAnimalsText.text = animalsText;
   });
 
-  
+
   //==================================================================================
   // GlobalStringSignal
   //==================================================================================
@@ -142,6 +142,32 @@ const TouchGestures = require('TouchGestures');
   TouchGestures.onLongPress().subscribe(async (gesture) => {
     stringGlobalSignal1.set(INITAL_VALUE(1));
     stringGlobalSignal2.set(INITAL_VALUE(2));
+  });
+
+  //==================================================================================
+  // GlobalScalarSignal
+  //==================================================================================
+
+  // Locate the string text objects in the Scene
+  const numberText1 = await Scene.root.findFirst('number1');
+  const numberText2 = await Scene.root.findFirst('number2');
+  const sumText = await Scene.root.findFirst('sum');
+
+  // Create GlobalScalarSignals as local signals
+  const randomNumber1 = await State.createGlobalScalarSignal(0, 'randomNumber1');
+  const randomNumber2 = await State.createGlobalScalarSignal(0, 'randomNumber2');
+
+  // Update the text with numbers
+  numberText1.text = Reactive.val('Random number: ').concat(randomNumber1.toString());
+  numberText2.text = Reactive.val('Another random number: ').concat(randomNumber2.toString());
+
+  // As GlobalScalarSignal extends ScalarSignal, the add operation works
+  sumText.text = Reactive.val('Sum: ').concat(randomNumber1.add(randomNumber2).toString());
+
+  // When the participant taps on the screen, update the numbers
+  TouchGestures.onTap().subscribe((gesture) => {
+    randomNumber1.set(Math.floor(Math.random() * 10));
+    randomNumber2.set(Math.floor(Math.random() * 10));
   });
 
 })(); // Enables async/await in JS [part 2]
