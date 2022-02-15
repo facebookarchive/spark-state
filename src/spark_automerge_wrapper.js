@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates. 
+ * Copyright (c) Facebook, Inc. and its affiliates.
  */
 
 const Automerge = require('Automerge')
@@ -32,7 +32,7 @@ function decodeMessage(msg) {
   const metaDataLength = msg[0];
   const totalSize = msg.length;
 
-  // Decode meta data from msg to JSON 
+  // Decode meta data from msg to JSON
   const metaDataBuf = msg.subarray(metaDataLengthSize, metaDataLengthSize + metaDataLength)
   const metaData = JSON.parse(String.fromCharCode(...metaDataBuf));
   // Decode sync message
@@ -78,6 +78,17 @@ function initSignalString(message, signalName, startValue) {
 }
 
 /**
+ * Creates a document with a scalar that will be located at property `signalName`.
+ *
+ * The value of the scalar will be `startValue`.
+ */
+function initSignalScalar(message, signalName, startValue) {
+  return Automerge.change(init(), message, doc => {
+    doc.set(signalName, startValue)
+  })
+}
+
+/**
  * Adds the integer `incrementValue` to the value of the counter located at property
  * `signalName` in the given `state`.
  *
@@ -91,12 +102,24 @@ function incrementSignalCounter(state, message, signalName, incrementValue) {
 }
 
 /**
- * Stes the string `newValue` to the value of the string located at property
+ * Sets the string `newValue` to the value of the string located at property
  * `signalName` in the given `state`.
  *
  * The change will be register on the `state` history with the given `message`.
  */
 function setSignalString(state, message, signalName, newValue) {
+  return Automerge.change(state, message, doc => {
+    doc.set(signalName, newValue)
+  })
+}
+
+/**
+ * Sets the scalar `newValue` to the value of the scalar located at property
+ * `signalName` in the given `state`.
+ *
+ * The change will be register on the `state` history with the given `message`.
+ */
+function setSignalScalar(state, message, signalName, newValue) {
   return Automerge.change(state, message, doc => {
     doc.set(signalName, newValue)
   })
@@ -209,5 +232,7 @@ module.exports = {
   initSignalString,
   setSignalString,
   incrementSignalCounter,
-  get
+  get,
+  initSignalScalar,
+  setSignalScalar
 }
