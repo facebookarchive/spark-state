@@ -126,6 +126,21 @@ function setSignalScalar(state, message, signalName, newValue) {
 }
 
 /**
+ * Pushes each element in `newValues` array to the array located at property `arrayName`
+ * in the given `state`.
+ *
+ * The change will be registered on the `state` history with the given `message`.
+ */
+function pushToArray(state, message, arrayName, newValues) {
+  return Automerge.change(state, message, doc => {
+    let array = doc.get(arrayName)
+    for (let elem of newValues) {
+      array.push(elem)
+    }
+  })
+}
+
+/**
  * Receives the `syncStates` map and `peerId` to be reset.
  *
  * Resets the syn state associated with `peerId`.
@@ -216,7 +231,7 @@ function processMessage(state, syncStates, peerId, msg) {
 
 function get(state, key) {
   let value = state[key]
-  if (typeof value === 'object') {
+  if (typeof value === 'object' && !Array.isArray(value)) {
     value = value.toJSON()
   }
   return value
@@ -234,5 +249,6 @@ module.exports = {
   incrementSignalCounter,
   get,
   initSignalScalar,
-  setSignalScalar
+  setSignalScalar,
+  pushToArray
 }
