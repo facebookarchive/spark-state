@@ -19,6 +19,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
 - [Documentation](https://github.com/facebookincubator/spark-state#documentation)
   - [`GlobalCounterSignal`](https://github.com/facebookincubator/spark-state#globalcountersignal)
   - [`GlobalStringSignal`](https://github.com/facebookincubator/spark-state#globalstringsignal)
+  - [`GlobalScalarSignal`](https://github.com/facebookincubator/spark-state#globalscalarsignal)
   - [`GlobalPeersMap`](https://github.com/facebookincubator/spark-state#globalpeersmap)
 - [Example](https://github.com/facebookincubator/spark-state#example)
 - [Additional resources](https://github.com/facebookincubator/spark-state#additional-resources)
@@ -78,7 +79,6 @@ GlobalCounterSignal.monitor().subscribe((event) => {
 | `createGlobalCounterSignal(startValue: number, signalName: string)` | Creates a new `GlobalCounterSignal` with a globally unique name as specified by `signalName`, and with the initial value set by `startValue`. |
 | `increment(i: number)` | Increases the value of the `GlobalCounterSignal` by the value of `i`. |
 | `decrement(i: number)` | Decreases the value of the `GlobalCounterSignal` by the value of `i`. |
-| `set(val: number)` | Sets the value of the `GlobalCounterSignal` to `val`. |
 
 <br>
 
