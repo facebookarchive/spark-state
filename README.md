@@ -5,7 +5,7 @@
 
 # Spark State
 
-The **Spark State** library introduces a solution to manage effects' states by creating globally synchronized data signals and making them available within an effect's JavaScript.
+The **Spark State** library introduces a solution to manage a <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/creating-a-group-effect-with-the-multipeer-api" target="_blank">group effect's</a> global state by creating globally synchronized data signals and making them available within an effect's JavaScript.
 
 <br>
 
@@ -22,6 +22,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
   - [`GlobalScalarSignal`](https://github.com/facebookincubator/spark-state#globalscalarsignal)
   - [`GlobalPeersMap`](https://github.com/facebookincubator/spark-state#globalpeersmap)
 - [Example](https://github.com/facebookincubator/spark-state#example)
+- [Limitations](https://github.com/facebookincubator/spark-state#limitations)
 - [Additional resources](https://github.com/facebookincubator/spark-state#additional-resources)
 - [License](https://github.com/facebookincubator/spark-state#license)
 
@@ -31,7 +32,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
 
 ### Spark AR project setup
 
-1. <a href="https://sparkar.facebook.com/ar-studio/learn/downloads/" target="_blank">Download</a> or upgrade to Spark AR Studio v128 or higher.
+1. <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/downloads/" target="_blank">Download</a> or upgrade to Spark AR Studio v128 or higher.
 2. Open your project in Spark AR Studio.
 3. Open the AR Library from within the Assets panel and select the **Script Packages** tab.
 4. Import the `spark-state` package to the project.
@@ -43,7 +44,7 @@ The **Spark State** library introduces a solution to manage effects' states by c
 
 1. Add a new Javascript script to the project from the Assets panel, or open an existing one.
 2. At the top of the script, load the module using the following line of code:
-
+   
    ```js
    const State = require('spark-state');
    ```
@@ -62,9 +63,9 @@ The **Spark State** library introduces a solution to manage effects' states by c
 
 ### `GlobalCounterSignal`
 
-`GlobalCounterSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal/" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronized globally across all peers in a multipeer effect.
+`GlobalCounterSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.scalarsignal/" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronized globally across all peers in a multipeer effect.
 
-Additionally, it's possible to subscribe to a `GlobalCounterSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
+Additionally, it's possible to subscribe to a `GlobalCounterSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
 ```js
 GlobalCounterSignal.monitor().subscribe((event) => {
@@ -82,7 +83,7 @@ GlobalCounterSignal.monitor().subscribe((event) => {
 
 <br>
 
-> `GlobalCounterSignal` extends the `ScalarSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal#methods/" target="_blank">methods</a> exposed by `ScalarSignal` can also be called on `GlobalCounterSignal`.
+> `GlobalCounterSignal` extends the `ScalarSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.scalarsignal#methods/" target="_blank">methods</a> exposed by `ScalarSignal` can also be called on `GlobalCounterSignal`.
 
 <br>
 
@@ -110,9 +111,9 @@ const State = require('spark-state');
 
 ### `GlobalStringSignal`
 
-`GlobalStringSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.stringsignal/" target="_blank">`StringSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the string value contained by the signal is synchronised globally across all peers in a multipeer effect.
+`GlobalStringSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.stringsignal/" target="_blank">`StringSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the string value contained by the signal is synchronised globally across all peers in a multipeer effect.
 
-Additionally, it's possible to subscribe to a `GlobalStringSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
+Additionally, it's possible to subscribe to a `GlobalStringSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
 ```js
 GlobalStringSignal.monitor().subscribe((event) => {
@@ -129,7 +130,7 @@ GlobalStringSignal.monitor().subscribe((event) => {
 
 <br>
 
-> `GlobalStringSignal` extends the `StringSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.stringsignal#methods/" target="_blank">methods</a> exposed by `StringSignal` can also be called on `GlobalStringSignal`.
+> `GlobalStringSignal` extends the `StringSignal` class. As such, <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.stringsignal#methods/" target="_blank">methods</a> exposed by `StringSignal` can also be called on `GlobalStringSignal`.
 
 <br>
 
@@ -205,19 +206,19 @@ const State = require('spark-state');
 
 ### `GlobalPeersMap`
 
-`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a multipeer effect as keys, and their global signals as values.
+`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a multipeer effect as keys, and their global signals as values. 
 
 Values of types `GlobalCounterSignal` and `GlobalStringSignal` are supported.
 
-The `participantId` parameters in the method calls refer to each effect participant's unique ID string as returned by the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant#properties" target="_blank">`Participant.id`</a> property from the Spark AR API.
+The `participantId` parameters in the method calls refer to each effect participant's unique ID string as returned by the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant#properties" target="_blank">`Participant.id`</a> property from the Spark AR API.
 
 <br>
 
 | Methods | Description |
 |---|---|
 | `createGlobalPeersMap(participantsStartValue: number \| string, signalName: string)` | Creates a new `GlobalPeersMap` with a globally unique name as specified by `signalName`, and with the initial value set by `participantsStartValue`. |
-| `get(participantId: string)` | Returns the `GlobalCounterSignal` or `GlobalStringSignal` from the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
-| `set(participantId: string, value: number \| string)` | Sets the value of the `GlobalCounterSignal` or `GlobalStringSignal` to the value specified by `value`, for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
+| `get(participantId: string)` | Returns the `GlobalCounterSignal` or `GlobalStringSignal` from the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
+| `set(participantId: string, value: number \| string)` | Sets the value of the `GlobalCounterSignal` or `GlobalStringSignal` to the value specified by `value`, for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
 | `keys()` | Returns all of the keys from the `GlobalPeersMap`, as `participantIds`. |
 | `setOnNewPeerCallback(callback: Function)` | Sets a `callback` function to call whenever a new peer is added to the `GlobalPeersMap`. |
 
@@ -249,7 +250,7 @@ const Participants = require('Participants');
 
 <br><br>
 
-> Full Spark AR API documentation is available on the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/scripting/summary" target="_blank">main documentation site</a>.
+> Full Spark AR API documentation is available on the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/scripting/summary" target="_blank">main documentation site</a>.
 
 <br><br>
 
@@ -257,19 +258,37 @@ const Participants = require('Participants');
 
 The sample code found in the [`script.js`](./src/script.js) file shows practical usage for all of the global types currently supported by the **Spark State** library.
 
+You can also check out <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/synchronizing-data-across-participants-with-the-state-api" target="_blank">this tutorial</a> on the official Spark AR documentation site, which uses the `State` API to synchronize data across participants.
+
+<br><br>
+
+## Limitations
+
+There are some limitations to keep in mind when using the **Spark State** library with group effects.
+
+The `State` API only supports group effects with up to four participants. A global synchronized state is not guaranteed for effects with a higher participant count.
+
+Additionally, to avoid synchronization issues the global state should not be updated more than twice per second, per participant.
+
+If you need to synchronize data across more than four participants, or require a greater message rate limit, consider using alternative methods to send data between participants.
+
+<a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/creating-turn-based-experiences-with-the-participants-api" target="_blank">This tutorial</a> from the official Spark AR documentation site shows how to synchronize data between participants using the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/multipeermodule.messagechannel" target="_blank">`MessageChannel`s</a> provided by the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/multipeermodule" target="_blank">`MultipeerModule`</a> API.
+
+
 <br><br>
 
 
 ### Additional resources
 
-The following resources are available on the <a href="https://sparkar.facebook.com/ar-studio/learn/getting-started" target="_blank">**Spark AR Studio**</a> documentation site:
+The following resources are available on the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/getting-started" target="_blank">**Spark AR Studio**</a> documentation site:
 
-- <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule" target="_blank">`ParticipantsModule`</a>
-- <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/multipeermodule" target="_blank">`MultipeerModule`</a>
-- <a href="https://sparkar.facebook.com/ar-studio/learn/scripting/scripting-your-first-multipeer-effect" target="_blank">Scripting your first multipeer effect</a>
-- <a href="https://sparkar.facebook.com/ar-studio/learn/scripting/creating-turn-based-experiences" target="_blank">Creating turn-based experiences</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule" target="_blank">`ParticipantsModule`</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/multipeermodule" target="_blank">`MultipeerModule`</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/creating-a-group-effect-with-the-multipeer-api" target="_blank">Creating a Group Effect with the Multipeer API</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/creating-turn-based-experiences-with-the-participants-api" target="_blank">Creating Turn-Based Experiences with the Participants API</a>
+- <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/synchronizing-data-across-participants-with-the-state-api" target="_blank">Synchronizing Data Across Participants with the State API</a>
 
-<br><br>
+<br><br> 
 
 ### License
 
