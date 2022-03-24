@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/facebookincubator/spark-state#readme",
   "dependencies": {
-    "Automerge": "./src/automerge.js",
+    "Automerge": "facebookincubator/automerge#88e20bd23e15aa503cfe934f1d7930e5739918dc",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
