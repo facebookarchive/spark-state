@@ -32,7 +32,7 @@ The **Spark State** library introduces a solution to manage a <a href="https://s
 
 ### Spark AR project setup
 
-1. <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/downloads/" target="_blank">Download</a> or upgrade to Spark AR Studio v128 or higher.
+1. <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/downloads/" target="_blank">Download</a> or upgrade to Spark AR Studio v134 or higher.
 2. Open your project in Spark AR Studio.
 3. Open the AR Library from within the Assets panel and select the **Script Packages** tab.
 4. Import the `spark-state` package to the project.
