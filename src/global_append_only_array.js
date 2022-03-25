@@ -9,14 +9,11 @@ const Time = require('Time')
 const INIT_COMMIT_MESSAGE = 'INIT_ARRAY_COMMIT_MESSAGE'
 
 /**
- * If state doesn't have the array defined, this method creates a state with an array
- * (`startValue`) that will be located at `arrayName`.
- * This ensures that the array is only initialized if no other peer has done so yet.
+ * Creates a new state with a globally unique name as specified by `arrayName`, and with the initial value set by `startValue`.
  *
- * If the array is already defined, this returns it.
+ * If an array with a matching `arrayName` has already been defined, calling the method returns the existing array instead of creating a new one.
  *
- * NOTE: This method should always be called before updating the counter if there is a
- * chance that the counter has not been initialized yet.
+ * This method should always be called before updating the counter if there is a chance that the counter has not been initialized.
  */
 
 function guaranteeStateArray(state, arrayName, startValue) {
@@ -26,8 +23,9 @@ function guaranteeStateArray(state, arrayName, startValue) {
 }
 
 /**
- * Creates a new append-only GlobalArray with a globally unique name as specified by `arrayName`,
- * and with the initial value `startValue`.
+ * Creates a new `GlobalAppendOnlyArray` object with a globally unique name as specified by `arrayName`, and with the initial value set by `startValue`.
+ *
+ * Append-only arrays only support new elements being added to the end of the array. Elements can't be inserted elsewhere in the array, or removed.
  */
 export async function createGlobalAppendOnlyArray(startValue, arrayName) {
   if (!Array.isArray(startValue)) {

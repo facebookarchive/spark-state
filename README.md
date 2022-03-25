@@ -21,6 +21,7 @@ The **Spark State** library introduces a solution to manage a <a href="https://s
   - [`GlobalStringSignal`](https://github.com/facebookincubator/spark-state#globalstringsignal)
   - [`GlobalScalarSignal`](https://github.com/facebookincubator/spark-state#globalscalarsignal)
   - [`GlobalPeersMap`](https://github.com/facebookincubator/spark-state#globalpeersmap)
+  - [`SortedParticipantArray`](https://github.com/facebookincubator/spark-state#sortedparticipantarray)
 - [Example](https://github.com/facebookincubator/spark-state#example)
 - [Limitations](https://github.com/facebookincubator/spark-state#limitations)
 - [Additional resources](https://github.com/facebookincubator/spark-state#additional-resources)
@@ -44,7 +45,7 @@ The **Spark State** library introduces a solution to manage a <a href="https://s
 
 1. Add a new Javascript script to the project from the Assets panel, or open an existing one.
 2. At the top of the script, load the module using the following line of code:
-   
+
    ```js
    const State = require('spark-state');
    ```
@@ -63,7 +64,7 @@ The **Spark State** library introduces a solution to manage a <a href="https://s
 
 ### `GlobalCounterSignal`
 
-`GlobalCounterSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.scalarsignal/" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronized globally across all peers in a multipeer effect.
+`GlobalCounterSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.scalarsignal/" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronized globally across all participants in a group effect.
 
 Additionally, it's possible to subscribe to a `GlobalCounterSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
@@ -111,7 +112,7 @@ const State = require('spark-state');
 
 ### `GlobalStringSignal`
 
-`GlobalStringSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.stringsignal/" target="_blank">`StringSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the string value contained by the signal is synchronised globally across all peers in a multipeer effect.
+`GlobalStringSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.stringsignal/" target="_blank">`StringSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the string value contained by the signal is synchronised globally across all participants in a group effect.
 
 Additionally, it's possible to subscribe to a `GlobalStringSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
@@ -158,7 +159,7 @@ const State = require('spark-state');
 
 ### `GlobalScalarSignal`
 
-`GlobalScalarSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/ReactiveModule.ScalarSignal" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronised globally across all peers in a multipeer effect.
+`GlobalScalarSignal` is a wrapper object for the <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/ReactiveModule.ScalarSignal" target="_blank">`ScalarSignal`</a> class from the Spark AR API's <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule/" target="_blank">`ReactiveModule`</a>. However, the scalar value contained by the signal is synchronised globally across all participants in a group effect.
 
 Additionally, it's possible to subscribe to a `GlobalScalarSignal` like you would with an <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.eventsource/" target="_blank">`EventSource`</a>:
 
@@ -206,7 +207,7 @@ const State = require('spark-state');
 
 ### `GlobalPeersMap`
 
-`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a multipeer effect as keys, and their global signals as values. 
+`GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a group effect as keys, and their global signals as values.
 
 Values of types `GlobalCounterSignal` and `GlobalStringSignal` are supported.
 
@@ -241,6 +242,50 @@ const Participants = require('Participants');
 
     // Get the GlobalCounterSignal from the specified participant
     const pointCounter = await points.get(myParticipantId);
+
+})();
+```
+
+</p>
+</details>
+
+<br><br>
+
+### `SortedParticipantArray`
+
+`SortedParticipantArray` provides access to an array containing a sorted list of the participants in a group effect, which is synchronized across all participants.
+
+The object can be queried to get a snapshot of the participants active in the effect or that have been active in the call at some point, sorted by join time.
+
+<br>
+
+| Methods | Description |
+|---|---|
+| `createSortedParticipantArray()` | Creates a new `SortedParticipantArray` object that can be queried for sorted participant lists. |
+| `getSortedActiveParticipants()` | Returns a snapshot of the participants active in the group effect as an array of <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant/" target="_blank">`Participant`</a> objects, sorted by join time. |
+| `getSortedAllTimeParticipants()` | Returns a snapshot of the participants that have been in the call as an array of <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant/" target="_blank">`Participant`</a> objects, sorted by join time. The returned array includes **all** of the participants who have joined the call, whether they are currently active or not. |
+
+<br>
+
+| Properties | Description |
+|---|---|
+| `isSyncedSignal` | A <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.boolsignal/" target="_blank">`BoolSignal`</a> representing whether the array is synchronized with the global array. When there is a change in the call's participants, the signal will be `false` and will revert to `true` once it has synchronized. |
+
+<br>
+
+<details><summary><b>Click to view example</b></summary>
+<p>
+
+```js
+const State = require('spark-state');
+
+(async function () {
+
+    // Initializes a new sorted participant array
+    const sortedParticipantArray = await State.createSortedParticipantArray();
+
+    // Get all of the participants currently active in the effect
+    const activeParticipants = sortedParticipantArray.getSortedActiveParticipants();
 
 })();
 ```
@@ -288,7 +333,7 @@ The following resources are available on the <a href="https://sparkar.facebook.c
 - <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/creating-turn-based-experiences-with-the-participants-api" target="_blank">Creating Turn-Based Experiences with the Participants API</a>
 - <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/synchronizing-data-across-participants-with-the-state-api" target="_blank">Synchronizing Data Across Participants with the State API</a>
 
-<br><br> 
+<br><br>
 
 ### License
 
