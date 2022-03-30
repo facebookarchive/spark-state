@@ -4,100 +4,140 @@
 
 const Participants = require('Participants')
 const Time = require('Time')
-const GlobalArray = require('./global_array')
+const GlobalAppendOnlyArray = require('./global_append_only_array')
 const Reactive = require('Reactive')
-
 const Diagnostics = require('Diagnostics')
 
-const MAX_WAIT_FOR_SELF_ADD = 10000
-const SPARK_SORTED_PARTICIPANTS = "sparkSortedParticipants"
+const SPARK_SORTED_PARTICIPANTS = "sparkSortedParticipants";
+const SPARK_SORTED_PARTICIPANTS_COMPLETE = "sparkSortedParticipantsComplete";
+
+let currentSortedParticipantArray_ = null;
 
 export async function createSortedParticipantArray() {
-  const localParticipant = await Participants.self
-  const sortedParticipants = await GlobalArray.createGlobalArray([], SPARK_SORTED_PARTICIPANTS)
 
-  const isComplete = Reactive.boolSignalSource("sparkSortedParticipantsComplete")
-  isComplete.set(false)
-  sortedParticipants.isCompleteSignal = isComplete.signal
+  if (currentSortedParticipantArray_ != null) {
+    return currentSortedParticipantArray_;
+  }
+
+  const globalParticipantsArray =
+    await GlobalAppendOnlyArray.createGlobalAppendOnlyArray([], SPARK_SORTED_PARTICIPANTS);
+
+  const sortedParticipantsWrapper = {}
+
+  const isSynced = Reactive.boolSignalSource(SPARK_SORTED_PARTICIPANTS_COMPLETE);
+  isSynced.set(false);
+  sortedParticipantsWrapper.isSyncedSignal = isSynced.signal;
 
   // Add local or send to changes queue
-  sortedParticipants.pushContent(localParticipant.id)
-
-  // Add fallback for adding local participant
-  const addLocalParticipantTimeOut = Time.setTimeout(() => {
-    if (!sortedParticipants.some(p => p === localParticipant.id)) {
-      sortedParticipants.setIsSynced(true);
-    }
-  }, MAX_WAIT_FOR_SELF_ADD)
+  const localParticipant = await Participants.self;
+  globalParticipantsArray.push(localParticipant.id);
 
   // Wait for all current participants to be added
   const initialSyncInterval = Time.setInterval(async () => {
     const complete = isSortedParticipantArrayComplete();
     if (complete) {
-      isComplete.set(true);
-      Time.clearTimeout(initialSyncInterval);
+      Diagnostics.log("Complete from peers!")
+      isSynced.set(true);
+      Time.clearInterval(initialSyncInterval);
     }
   }, 1000);
 
-  sortedParticipants.getSortedActiveParticipants = async () => {
-    const activeParticipants = new Set(await getActiveParticipantIDs());
-    let sortedActiveParticipants = [];
-    for (let participantId of sortedParticipants) {
-      if (activeParticipants.has(participantId)) {
-        sortedActiveParticipants.push(participantId);
-        activeParticipants.delete(participantId);
+  sortedParticipantsWrapper.getSortedActiveParticipants = async () => {
+    const activeParticipantsMap = await getActiveParticipantsMap();
+    const sortedActiveParticipants = [];
+    const globalParticipantsSnapshot = globalParticipantsArray.getSnapshot();
+    for (let participantId of globalParticipantsSnapshot) {
+      if (activeParticipantsMap.has(participantId)) {
+        sortedActiveParticipants.push(activeParticipantsMap.get(participantId));
+        activeParticipantsMap.delete(participantId);
       }
     }
     return sortedActiveParticipants;
   }
 
-  sortedParticipants.getSortedParticipants = async () => {
-    const peers = (await Participants.getAllOtherParticipants()).map(p => p.id)
-    const allParticipants = new Set(peers)
-    allParticipants.add(localParticipant.id)
+  sortedParticipantsWrapper.getSortedAllTimeParticipants = async () => {
+    const allParticipantsMap = new Map();
+    (await Participants.getAllOtherParticipants()).forEach(p => allParticipantsMap.set(p.id, p));
+    allParticipantsMap.set(localParticipant.id, localParticipant);
 
-    let sortedAllParticipants = []
-    for (let participantId of sortedParticipants) {
-      if (allParticipants.has(participantId)) {
-        sortedAllParticipants.push(participantId)
-        allParticipants.delete(participantId)
+    const sortedAllTimeParticipants = [];
+    const globalParticipantsSnapshot = globalParticipantsArray.getSnapshot();
+    for (let participantId of globalParticipantsSnapshot) {
+      if (allParticipantsMap.has(participantId)) {
+        sortedAllTimeParticipants.push(allParticipantsMap.get(participantId));
+        allParticipantsMap.delete(participantId);
       }
     }
-    return sortedAllParticipants
+    return sortedAllTimeParticipants;
   }
 
   // Monitor changes
   Participants.onOtherParticipantAdded().subscribe(async (participant) => {
-    // When a new participant is added to the call, we clear the "complete" flag
+    // When a new participant is added to the call, the array is not synced
     // until this participant is added to the global array
-    isComplete.set(false);
+    isSynced.set(false);
+    let intervalRuns = 0;
     const addParticipantInterval = Time.setInterval(async () => {
+      intervalRuns++;
       let complete = await isSortedParticipantArrayComplete();
       if (complete) {
-        isComplete.set(true);
         Time.clearInterval(addParticipantInterval);
+        updateIsSyncedAfterIntervals(intervalRuns);
       }
     }, 1000);
-  });
+
+    // Monitor the new participant for status changes to emit
+    // an isSynced signal
+    participant.isActiveInCall.monitor().subscribe((event) => {
+      isSynced.set(false);
+      Time.setTimeout(() => {
+        isSynced.set(true);
+      }, 50);
+    })
+  })
+
+  const currentParticipants = await Participants.getAllOtherParticipants();
+  currentParticipants.forEach(participant => {
+    // Monitor all current participants for status changes to emit
+    // an isSynced signal
+    participant.isActiveInCall.monitor().subscribe((event) => {
+      isSynced.set(false);
+      Time.setTimeout(() => {
+        isSynced.set(true);
+      }, 50);
+    })
+  })
 
   // Helper functions
-  async function getActiveParticipantIDs() {
+  async function getActiveParticipantsMap() {
     const peers = await Participants.getAllOtherParticipants();
-    const activeParticipantIDs = [];
+    const activeParticipantsMap = new Map();
     peers.forEach(p => {
       if (p.isActiveInCall.pinLastValue()) {
-        activeParticipantIDs.push(p.id);
+        activeParticipantsMap.set(p.id, p);
       }
     });
-    activeParticipantIDs.push(localParticipant.id);
-    return activeParticipantIDs;
+    activeParticipantsMap.set(localParticipant.id, localParticipant);
+    return activeParticipantsMap;
   }
 
   async function isSortedParticipantArrayComplete() {
-    const activeParticipantIDs = await getActiveParticipantIDs();
-    const currentParticipants = new Set(sortedParticipants);
-    return activeParticipantIDs.every(p => currentParticipants.has(p));
+    const participantsFromAPI = await Participants.getAllOtherParticipants();
+    participantsFromAPI.push(localParticipant);
+    const participantsFromArray = new Set(globalParticipantsArray.getSnapshot());
+    return participantsFromAPI.every(p => participantsFromArray.has(p.id));
   }
 
-  return sortedParticipants;
+  function updateIsSyncedAfterIntervals(intervalRuns) {
+    if (intervalRuns > 1) {
+      isSynced.set(true);
+    } else {
+      Time.setTimeout(() => {
+        isSynced.set(true);
+      }, 50);
+    }
+  }
+
+  currentSortedParticipantArray_ = sortedParticipantsWrapper;
+  return sortedParticipantsWrapper;
 }

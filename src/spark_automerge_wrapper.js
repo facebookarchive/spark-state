@@ -126,22 +126,16 @@ function setSignalScalar(state, message, signalName, newValue) {
 }
 
 /**
- * Pushes `content` to the array located at property `arrayName`
+ * Pushes each element in `newValues` array to the array located at property `arrayName`
  * in the given `state`.
  *
  * The change will be registered on the `state` history with the given `message`.
  */
-function pushToArray(state, message, arrayName, content) {
-  return Automerge.change(state, message, doc => {
-    doc.get(arrayName).push(content)
-  })
-}
-
-function updateArrayWithBatchedChanges(state, message, arrayName, batchedChanges) {
+function pushToArray(state, message, arrayName, newValues) {
   return Automerge.change(state, message, doc => {
     let array = doc.get(arrayName)
-    for (let change of batchedChanges) {
-      array.push(change.newValue)
+    for (let elem of newValues) {
+      array.push(elem)
     }
   })
 }
@@ -256,6 +250,5 @@ module.exports = {
   get,
   initSignalScalar,
   setSignalScalar,
-  pushToArray,
-  updateArrayWithBatchedChanges
+  pushToArray
 }
