@@ -3,9 +3,50 @@
  */
 
 const GlobalSignal = require('./global_signal')
-const SignalsWrapper = require('./signals_wrapper')
 const SparkAutomergeWrapper = require('./spark_automerge_wrapper')
 const INIT_COMMIT_MESSAGE = 'INIT_COUNTER_COMMIT_MESSAGE'
+const Reactive = require('Reactive')
+
+/**
+ * Returns a `ScalarSignal` object that can be modified via calls to the `increment` or `decrement` methods.
+ */
+async function Counter(startValue, signalName) {
+  const source = Reactive.scalarSignalSource(signalName)
+  source.set(startValue)
+  const signal = source.signal;
+
+  signal.compareAndUpdateLocal = function(val) {
+    if (signal.pinLastValue() !== val) {
+      source.set(val)
+    }
+  }
+
+  signal.setValueOnly = function (val) {
+    source.set(val)
+  }
+
+  signal.setValueAndUpdate = function (val) {
+    const oldValue = signal.pinLastValue();
+    source.set(val)
+    signal.updateState({ newValue: val, oldValue })
+  }
+
+  signal.set = function (val) {
+    throw new Error ('The function `set` from GlobalCounterSignal is no longer supported. Use increment and decrement or GlobalScalarSignal instead.');
+  }
+
+  signal.increment = function (i) {
+    signal.setValueAndUpdate(signal.pinLastValue() + i)
+  }
+
+  signal.decrement = function (i) {
+    signal.setValueAndUpdate(signal.pinLastValue() - i)
+  }
+
+  signal.setReceivedAllValues = function (val) {}
+
+  return signal
+}
 
 /**
  * If state doesn't have the counter defined, this method creates a state with a counter that
@@ -26,7 +67,7 @@ function guaranteeStateCounter(state, signalName, startValue) {
  * Creates a new `GlobalCounterSignal` with a globally unique name as specified by `signalName`, and with the initial value set by `startValue`.
  */
 export async function createGlobalCounterSignal(startValue, signalName) {
-  const signal = await SignalsWrapper.Counter(startValue, signalName)
+  const signal = await Counter(startValue, signalName)
 
   const updateState = (state, signalName, event) => {
     return SparkAutomergeWrapper.incrementSignalCounter(
