@@ -114,21 +114,19 @@ export async function createGlobalSignal(signal, startValue, signalName, guarant
       }, 100);
     }
 
-    // Local participant has received all the values from the array from at least one peer
-    // when there's values in the global signal
-    const receivedAllValues = Object.values(syncStates).some(peerState =>
-      (peerState.allChangesSent === ALL_CHANGES_SENT && peerState.sharedHeads.length > 0)
-    )
-
-    let hasChangesForNewPeers = true
-    if (newValue == null) {
-      // If there are no values in the global signal, we mark it as "synchronized" if
-      // local participant doesn't have changes to send to the new peers
-      hasChangesForNewPeers = hasChangesForNewPeers()
+    if (signal.receivedAllValuesSignal.eq(false)) {
+      // If the signal was waiting for some values,
+      // then we mark it as having received them if there's at least one peer
+      // with a syncState with:
+      // - values (sharedHeads.length > 0)
+      // - a flag indicating it sent all of them
+      const receivedAllValues = Object.values(syncStates).some(peerState =>
+        (peerState.allChangesSent === ALL_CHANGES_SENT && peerState.sharedHeads.length > 0)
+      )
+      Time.setTimeout(() => {
+        signal.setReceivedAllValues(receivedAllValues)
+      }, 50)
     }
-    Time.setTimeout(() => {
-      signal.setReceivedAllValues(receivedAllValues || !hasChangesForNewPeers)
-    }, 50)
   })
 
   signal.updateState = function (event) {
