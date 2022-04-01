@@ -51,15 +51,29 @@ export async function createGlobalSignal(signal, startValue, signalName, guarant
   let delayTimer;
   let lastDelayTime = null;
 
-  function hasNoChangesForNewPeers() {
+  function hasChangesForNewPeers() {
     const existingPeerUuids = new Set(allPeers.map(p => getUuid(p.id)))
     for (const [peerUuid, peerSyncState] of Object.entries(syncStates)) {
-      if (!existingPeerUuids.has(peerUuid)
-        && peerSyncState.allChangesSent !== ALL_CHANGES_SENT) { // new Peer awaiting for changes
-        return false
+      if (!existingPeerUuids.has(peerUuid) // new peer
+        && peerSyncState.allChangesSent !== ALL_CHANGES_SENT) { // that local peer hasn't sent all changes yet
+        return true
       }
     }
-    return true
+    return false
+  }
+
+  function hasUnitializedStatesFromExistingPeers() {
+    const existingPeerUuids = new Set(allPeers.map(p => getUuid(p.id)))
+    for (const [peerUuid, peerSyncState] of Object.entries(syncStates)) {
+      if (existingPeerUuids.has(peerUuid)) {
+        if (peerState.allChangesSent !== null || peerState.sharedHeads.length > 0) {
+          // Found an initialized state from an existing peer, in which the signal
+          // has a previous value (sharedHeads.length > 0)
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   channel.onMessage.subscribe((msg) => {
@@ -100,16 +114,20 @@ export async function createGlobalSignal(signal, startValue, signalName, guarant
       }, 100);
     }
 
+    // Local participant has received all the values from the array from at least one peer
+    // when there's values in the global signal
     const receivedAllValues = Object.values(syncStates).some(peerState =>
       (peerState.allChangesSent === ALL_CHANGES_SENT && peerState.sharedHeads.length > 0)
     )
 
-    let noChangesForNewPeers = false;
+    let hasChangesForNewPeers = true
     if (newValue == null) {
-      noChangesForNewPeers = hasNoChangesForNewPeers()
+      // If there are no values in the global signal, we mark it as "synchronized" if
+      // local participant doesn't have changes to send to the new peers
+      hasChangesForNewPeers = hasChangesForNewPeers()
     }
     Time.setTimeout(() => {
-      signal.setReceivedAllValues(receivedAllValues || noChangesForNewPeers)
+      signal.setReceivedAllValues(receivedAllValues || !hasChangesForNewPeers)
     }, 50)
   })
 
@@ -119,15 +137,14 @@ export async function createGlobalSignal(signal, startValue, signalName, guarant
     sendUpdateMessages(state, syncStates, myUuid, channel)
   };
 
+  // If there's no currentValue locally but we also haven't received any update value
+  // from peers in a `LONG_DELAY` time, we assume the array is empty and we can proceed
   if (allPeers.length > 0) {
     Time.setTimeout(() => {
       const currentValue = SparkAutomergeWrapper.get(state, signalName)
       if (lastDelayTime === null && currentValue == null) {
-        const noPreExistingValuesReceived = Object.values(syncStates).every(peerState =>
-          peerState.allChangesSent === null && peerState.sharedHeads.length === 0
-        )
-        const noChangesForNewPeers = hasNoChangesForNewPeers()
-        signal.setReceivedAllValues(noPreExistingValuesReceived || noChangesForNewPeers)
+        const uninitializedStatesFromExistingPeers = hasUnitializedStatesFromExistingPeers()
+        signal.setReceivedAllValues(uninitializedStatesFromExistingPeers)
       }
     }, LONG_DELAY)
   }

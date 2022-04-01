@@ -14,7 +14,7 @@ const INIT_COMMIT_MESSAGE = 'INIT_ARRAY_COMMIT_MESSAGE'
  */
 export async function AppendOnlyArray(startValue, arrayName) {
   let arrayWrapper = {}
-  let localArray = startValue
+  let localArray = startValue.slice()
   let localChangesQueue = []
 
   let receivedAllValues = Reactive.boolSignalSource(`${arrayName}_receivedAllValues`)
