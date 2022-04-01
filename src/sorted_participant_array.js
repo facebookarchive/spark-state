@@ -34,9 +34,8 @@ export async function createSortedParticipantArray() {
 
   // Wait for all current participants to be added
   const initialSyncInterval = Time.setInterval(async () => {
-    const complete = isSortedParticipantArrayComplete();
+    const complete = await isSortedParticipantArrayComplete();
     if (complete) {
-      Diagnostics.log("Complete from peers!")
       isSynced.set(true);
       Time.clearInterval(initialSyncInterval);
     }
