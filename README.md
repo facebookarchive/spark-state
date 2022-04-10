@@ -208,7 +208,7 @@ const State = require('spark-state');
 
 `GlobalPeersMap` is a key-value pair data type which contains the IDs of all <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">participants</a> in a group effect as keys, and their global signals as values.
 
-Values of types `GlobalCounterSignal` and `GlobalStringSignal` are supported.
+Values of types `GlobalScalarSignal` and `GlobalStringSignal` are supported.
 
 The `participantId` parameters in the method calls refer to each effect participant's unique ID string as returned by the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant#properties" target="_blank">`Participant.id`</a> property from the Spark AR API.
 
@@ -217,8 +217,8 @@ The `participantId` parameters in the method calls refer to each effect particip
 | Methods | Description |
 |---|---|
 | `createGlobalPeersMap(participantsStartValue: number \| string, signalName: string)` | Creates a new `GlobalPeersMap` with a globally unique name as specified by `signalName`, and with the initial value set by `participantsStartValue`. |
-| `get(participantId: string)` | Returns the `GlobalCounterSignal` or `GlobalStringSignal` from the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
-| `set(participantId: string, value: number \| string)` | Sets the value of the `GlobalCounterSignal` or `GlobalStringSignal` to the value specified by `value`, for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
+| `get(participantId: string)` | Returns the `GlobalScalarSignal` or `GlobalStringSignal` from the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
+| `set(participantId: string, value: number \| string)` | Sets the value of the `GlobalScalarSignal` or `GlobalStringSignal` to the value specified by `value`, for the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/participantsmodule.participant" target="_blank">`Participant`</a> specified by `participantId`. |
 | `keys()` | Returns all of the keys from the `GlobalPeersMap`, as `participantIds`. |
 | `setOnNewPeerCallback(callback: Function)` | Sets a `callback` function to call whenever a new peer is added to the `GlobalPeersMap`. |
 
@@ -239,7 +239,7 @@ const Participants = require('Participants');
     // Retrieve the ID for the self participant
     const myParticipantId = (await Participants.self).id;
 
-    // Get the GlobalCounterSignal from the specified participant
+    // Get the GlobalScalarSignal from the specified participant
     const pointCounter = await points.get(myParticipantId);
 
 })();
@@ -261,22 +261,6 @@ The sample code found in the [`script.js`](./src/script.js) file shows practical
 You can also check out <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/synchronizing-data-across-participants-with-the-state-api" target="_blank">this tutorial</a> on the official Spark AR documentation site, which uses the `State` API to synchronize data across participants.
 
 <br><br>
-
-## Limitations
-
-There are some limitations to keep in mind when using the **Spark State** library with group effects.
-
-The `State` API only supports group effects with up to four participants. A global synchronized state is not guaranteed for effects with a higher participant count.
-
-Additionally, to avoid synchronization issues the global state should not be updated more than twice per second, per participant.
-
-If you need to synchronize data across more than four participants, or require a greater message rate limit, consider using alternative methods to send data between participants.
-
-<a href="https://sparkar.facebook.com/ar-studio/learn/documentation/articles/video-calling-effects/creating-turn-based-experiences-with-the-participants-api" target="_blank">This tutorial</a> from the official Spark AR documentation site shows how to synchronize data between participants using the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/multipeermodule.messagechannel" target="_blank">`MessageChannel`s</a> provided by the <a href="https://sparkar.facebook.com/ar-studio/learn/documentation/reference/classes/multipeermodule" target="_blank">`MultipeerModule`</a> API.
-
-
-<br><br>
-
 
 ### Additional resources
 
