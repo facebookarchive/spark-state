@@ -1,9 +1,14 @@
 export function encodeMessage(metaData, syncMessage) {
   const metaDataStr = JSON.stringify(metaData);
-  const metaDataBuf = Uint8Array.from(metaDataStr, s => s.charCodeAt(0));
+  const metaDataBuf = Uint8Array.from(metaDataStr, (s) => s.charCodeAt(0));
   const metaDataLength = metaDataBuf.length;
-  const metaDataLengthSize = 1, nonZeroPaddingSize = 1;
-  const totalSize = metaDataLengthSize + metaDataLength + syncMessage.length + nonZeroPaddingSize;
+  const metaDataLengthSize = 1,
+    nonZeroPaddingSize = 1;
+  const totalSize =
+    metaDataLengthSize +
+    metaDataLength +
+    syncMessage.length +
+    nonZeroPaddingSize;
 
   let msg = new Uint8Array(totalSize);
   msg[0] = metaDataLength;
@@ -17,19 +22,26 @@ export function encodeMessage(metaData, syncMessage) {
   // Will remove it once messenger team correct this trimming on their side
   msg[totalSize - 1] = 1;
 
-  return msg
+  return msg;
 }
 
 export function decodeMessage(msg) {
-  const metaDataLengthSize = 1, nonZeroPaddingSize = 1;
+  const metaDataLengthSize = 1,
+    nonZeroPaddingSize = 1;
   const metaDataLength = msg[0];
   const totalSize = msg.length;
 
   // Decode meta data from msg to JSON
-  const metaDataBuf = msg.subarray(metaDataLengthSize, metaDataLengthSize + metaDataLength)
+  const metaDataBuf = msg.subarray(
+    metaDataLengthSize,
+    metaDataLengthSize + metaDataLength
+  );
   const metaData = JSON.parse(String.fromCharCode(...metaDataBuf));
   // Decode sync message
-  const syncMessage = msg.subarray(metaDataLengthSize + metaDataLength, totalSize - nonZeroPaddingSize);
+  const syncMessage = msg.subarray(
+    metaDataLengthSize + metaDataLength,
+    totalSize - nonZeroPaddingSize
+  );
 
   return [metaData, syncMessage];
 }

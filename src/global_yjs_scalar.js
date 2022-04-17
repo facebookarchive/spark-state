@@ -1,18 +1,18 @@
-const Reactive = require('Reactive')
+const Reactive = require("Reactive");
 
-const YDoc = require('./yjs_doc')
+const YDoc = require("./yjs_doc");
 
 export async function createGlobalScalarSignal(startValue, name) {
   // set up signal source
-  const source = Reactive.scalarSignalSource(name)
-  source.set(startValue)
+  const source = Reactive.scalarSignalSource(name);
+  source.set(startValue);
   const signal = source.signal;
 
   const doc = await YDoc.createYDoc(name);
 
   // update the source value when ydoc value is changed
-  doc.on('update', _ => {
-    source.set(doc.getMap('n').get(name));
+  doc.on("update", (_) => {
+    source.set(doc.getMap("n").get(name));
   });
 
   /* Start of External API */
@@ -20,8 +20,8 @@ export async function createGlobalScalarSignal(startValue, name) {
   // signal setter API available to external users
   signal.set = (val) => {
     // set ydoc value with user input
-    doc.getMap('n').set(name, val)
-  }
+    doc.getMap("n").set(name, val);
+  };
 
   /* End of External API */
 
