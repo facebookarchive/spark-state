@@ -78,9 +78,8 @@ export async function createSortedParticipantArray() {
 
   /* Start of External API */
 
-  // Number of changes that have updated this array so far
-  // Signal would notify creators when any changes have been made
-  arrayWrapper.numberOfChanges = changesSignal;
+  // changesSignal would notify creators when any changes have been made
+  arrayWrapper.changesSignal = changesSignal;
 
   arrayWrapper.getSortedAllTimeParticipants = async () => {
     return await Promise.all(
