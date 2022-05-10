@@ -21,6 +21,7 @@ The **Spark State** library introduces a solution to manage a <a href="https://s
   - [`GlobalStringSignal`](https://github.com/facebookincubator/spark-state#globalstringsignal)
   - [`GlobalScalarSignal`](https://github.com/facebookincubator/spark-state#globalscalarsignal)
   - [`GlobalPeersMap`](https://github.com/facebookincubator/spark-state#globalpeersmap)
+  - [`SortedParticipantArray`](https://github.com/facebookincubator/spark-state#sortedparticipantarray)
 - [Example](https://github.com/facebookincubator/spark-state#example)
 - [Limitations](https://github.com/facebookincubator/spark-state#limitations)
 - [Additional resources](https://github.com/facebookincubator/spark-state#additional-resources)
@@ -241,6 +242,53 @@ const Participants = require('Participants');
 
     // Get the GlobalScalarSignal from the specified participant
     const pointCounter = points.get(myParticipantId);
+
+})();
+```
+
+</p>
+</details>
+
+<br><br>
+
+### `SortedParticipantArray`
+
+`SortedParticipantArray` provides access to an array containing a sorted list of the participants in a group effect, which is synchronized across all participants.
+
+The object can be queried to get a snapshot of the participants active in the effect or that have been active in the call at some point, sorted by join time.
+
+<br>
+
+| Methods | Description |
+|---|---|
+| `createSortedParticipantArray()` | Creates a new `SortedParticipantArray` object that can be queried for sorted participant lists. |
+| `getSortedActiveParticipants()` | Returns a snapshot of the participants active in the group effect as an array of <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant/" target="_blank">`Participant`</a> objects, sorted by join time. |
+| `getSortedAllTimeParticipants()` | Returns a snapshot of the participants that have been in the call as an array of <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/participantsmodule.participant/" target="_blank">`Participant`</a> objects, sorted by join time. The returned array includes **all** of the participants who have joined the call, whether they are currently active or not. |
+
+<br>
+
+| Properties | Description |
+|---|---|
+| `changesSignal` | A <a href="https://sparkar.facebook.com/ar-studio/learn/reference/classes/reactivemodule.scalarsignal/" target="_blank">`ScalarSignal`</a> updated every time there’s a change in the call’s participants propagated to the Sorted Active Participants array.
+
+<br>
+
+<details><summary><b>Click to view example</b></summary>
+<p>
+
+```js
+const State = require('spark-state');
+(async function () {
+    // Initializes a new sorted participant array
+    const sortedParticipantArray = await State.createSortedParticipantArray();
+    // Get all of the participants currently active in the effect
+    let activeParticipants = await sortedParticipantArray.getSortedActiveParticipants();
+
+    sortedParticipantArray.changesSignal.monitor().subscribe(async () => {
+        // Update activeParticipants with new values
+        activeParticipants = await sortedParticipantArray.getSortedActiveParticipants();
+        doSomething();
+    });
 
 })();
 ```
