@@ -240,7 +240,7 @@ const Participants = require('Participants');
     const myParticipantId = (await Participants.self).id;
 
     // Get the GlobalScalarSignal from the specified participant
-    const pointCounter = await points.get(myParticipantId);
+    const pointCounter = points.get(myParticipantId);
 
 })();
 ```

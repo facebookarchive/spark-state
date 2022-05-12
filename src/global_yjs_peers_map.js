@@ -95,7 +95,7 @@ export async function createGlobalPeersMap(participantsStartValue, signalName) {
     return keys;
   };
 
-  map.get = async (participantId) => {
+  map.get = (participantId) => {
     return map[participantId];
   };
 
